@@ -7,6 +7,9 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AddIcon from "@mui/icons-material/Add";
+import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const menus = [
   { title: "home", gap: true },
@@ -16,15 +19,35 @@ const menus = [
   { title: "internet" },
 ];
 
+const messageSessions = [
+  { title: "learn Ts" },
+  { title: "learn JS" },
+  { title: "learn Java" },
+  { title: "learn C++" },
+];
+
 export default function Home() {
   const [open, setOpen] = useState(true);
+  const [sessionActive, setSessionActive] = useState(-1);
+  const [delVisible, setDelVisible] = useState(false);
+
+  const handleConfirm = () => {
+    setDelVisible(false);
+  };
+
+  const handleCancel = () => {
+    setDelVisible(false);
+  };
 
   return (
     <div className="flex">
       <div
-        className={` box-border h-screen  bg-blue-500    duration-300  overflow-hidden
-        ${open ? "w-3/12 p-1" : "w-0 p-0"} `}
+        className={` box-border h-screen overflow-hidden  bg-blue-500    duration-300   flex flex-col
+        ${open ? "w-3/12 p-1" : "w-0 p-0 "} `}
+        //  hidden 设置hidden属性 没有动画
+        //
       >
+        {/* 导航栏 */}
         <div className="flex items-stretch gap-2">
           <button className="p-2 border border-gray-300 grow hover:bg-blue-700 hover:text-white">
             {" "}
@@ -37,6 +60,62 @@ export default function Home() {
           >
             <ViewSidebarOutlinedIcon className="hover:text-white" />
           </a>
+        </div>
+
+        {/* 消息体 */}
+        <ul className="flex flex-col gap-3 mt-2 ">
+          {messageSessions.map((message, idx) => (
+            <li
+              className={`p-3 flex items-center gap-2 
+              hover:bg-slate-300 cursor-pointer rounded relative
+                ${sessionActive === idx && "bg-slate-300"}
+              `}
+              onClick={() => {
+                setSessionActive(idx);
+              }}
+              key={idx}
+            >
+              <MessageOutlinedIcon />
+              <span className=" font-sans text-lg">{message.title}</span>
+              {sessionActive === idx && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault(); // 防止事件上升
+                    setDelVisible(true);
+                  }}
+                >
+                  <DeleteOutlineOutlinedIcon className=" hover:text-gray-500" />
+                </button>
+              )}
+
+              {/* copy 弹窗确认框 */}
+              {delVisible && sessionActive === idx && (
+                <div className="absolute z-10 -top-10 -right-5 py-2   bg-slate-400 rounded-lg shadow-xl">
+                  <p className=" ">确认删除吗？</p>
+                  <div className="flex">
+                    <button
+                      onClick={handleConfirm}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold text-xs mr-2 rounded "
+                    >
+                      确认
+                    </button>
+                    <button
+                      onClick={handleCancel}
+                      className="bg-gray-400 hover:bg-gray-500 text-white font-bold text-xs   rounded"
+                    >
+                      取消
+                    </button>
+                  </div>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        {/* 个人信息栏 */}
+        <div className="mt-auto flex gap-2 p-3 border-t border-gray-400">
+          <AccountCircleOutlinedIcon />
+          <span>runningPig</span>
         </div>
       </div>
 
