@@ -19,19 +19,34 @@ const menus = [
   { title: "internet" },
 ];
 
-const messageSessions = [
-  { title: "learn Ts" },
-  { title: "learn JS" },
-  { title: "learn Java" },
-  { title: "learn C++" },
-];
+// const messageSessions = ;
 
 export default function Home() {
   const [open, setOpen] = useState(true);
   const [sessionActive, setSessionActive] = useState(-1);
   const [delVisible, setDelVisible] = useState(false);
 
-  const handleConfirm = () => {
+  const [messageSessions, setMessageSessions] = useState([
+    { title: "learn Ts" },
+    { title: "learn JS" },
+    { title: "learn Java" },
+    { title: "learn C++" },
+  ]);
+
+  const handleAdd = () => {
+    setMessageSessions([
+      ...messageSessions,
+      {
+        title: "hi",
+      },
+    ]);
+  };
+
+  const handleConfirm = (idx: number) => {
+    const newMessageSessions = messageSessions.filter(
+      (session, index) => index !== idx
+    );
+    setMessageSessions(newMessageSessions);
     setDelVisible(false);
   };
 
@@ -49,7 +64,10 @@ export default function Home() {
       >
         {/* 导航栏 */}
         <div className="flex items-stretch gap-2">
-          <button className="p-2 border border-gray-300 grow hover:bg-blue-700 hover:text-white">
+          <button
+            onClick={handleAdd}
+            className="p-2 border border-gray-300 grow hover:bg-blue-700 hover:text-white"
+          >
             {" "}
             <AddIcon />
             <span className=" font-sans ">New Chat</span>
@@ -94,7 +112,7 @@ export default function Home() {
                   <p className=" ">确认删除吗？</p>
                   <div className="flex">
                     <button
-                      onClick={handleConfirm}
+                      onClick={() => handleConfirm(idx)}
                       className="bg-red-500 hover:bg-red-600 text-white font-bold text-xs mr-2 rounded "
                     >
                       确认
